@@ -6,6 +6,9 @@ phases:
       - set -eu
       - test -f "$${CODEBUILD_SRC_DIR_LambdaBuild}/artifacts/metadata/lambda.env"
       - . "$${CODEBUILD_SRC_DIR_LambdaBuild}/artifacts/metadata/lambda.env"
+      - curl -fsSL "https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip" -o /tmp/terraform.zip
+      - unzip -oq /tmp/terraform.zip -d /usr/local/bin
+      - terraform version
   build:
     commands:
       - cd ${terraform_env_dir}/$${DEPLOY_ENV}

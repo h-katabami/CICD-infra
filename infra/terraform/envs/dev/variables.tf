@@ -29,6 +29,7 @@ variable "repositories" {
     lambda_source_dir       = optional(string, "lambdas/GuidanceHandler")
     lambda_package_name     = optional(string, "guidance-handler.zip")
     lambda_build_prefix     = optional(string, "lambda/guidance-handler")
+    terraform_version       = optional(string, "1.6.6")
     terraform_env_dir       = optional(string, "infra/terraform/envs")
     scenario_dir            = optional(string, "scenario")
     gram_dir                = optional(string, "gram")

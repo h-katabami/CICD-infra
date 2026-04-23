@@ -48,9 +48,11 @@ module "repository_pipeline" {
     frontend_build_prefix = each.value.frontend_build_prefix
   })
   terraform_plan_buildspec_content = templatefile("${local.buildspec_template_dir}/terraform-plan.yml.tftpl", {
+    terraform_version = each.value.terraform_version
     terraform_env_dir = each.value.terraform_env_dir
   })
   terraform_apply_buildspec_content = templatefile("${local.buildspec_template_dir}/terraform-apply.yml.tftpl", {
+    terraform_version = each.value.terraform_version
     terraform_env_dir = each.value.terraform_env_dir
     scenario_dir      = each.value.scenario_dir
     gram_dir          = each.value.gram_dir
