@@ -25,6 +25,7 @@ variable "repositories" {
     manual_approval_enabled = optional(bool, false)
     frontend_source_dir     = optional(string, "front")
     frontend_entry_file     = optional(string, "index.html")
+    frontend_build_prefix   = optional(string, "front")
     lambda_source_dir       = optional(string, "lambdas/GuidanceHandler")
     lambda_package_name     = optional(string, "guidance-handler.zip")
     lambda_build_prefix     = optional(string, "lambda/guidance-handler")

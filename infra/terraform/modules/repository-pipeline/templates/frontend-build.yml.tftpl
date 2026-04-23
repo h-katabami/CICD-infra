@@ -3,9 +3,13 @@ version: 0.2
 phases:
   build:
     commands:
-      - set -euo pipefail
+      - set -eu
+      - REPO_NAME=$${APP_REPO_NAME:-unknown-app}
+      - BUILD_BUCKET=$${BUILD_ARTIFACT_BUCKET}
+      - BUILD_PREFIX=build/$${REPO_NAME}/$${DEPLOY_ENV}/${frontend_build_prefix}
       - mkdir -p dist
       - cp ${frontend_source_dir}/${frontend_entry_file} dist/${frontend_entry_file}
+      - aws s3 sync dist/ s3://$${BUILD_BUCKET}/$${BUILD_PREFIX}/ --delete
 
 artifacts:
   base-directory: dist

@@ -45,6 +45,7 @@ module "repository_pipeline" {
   frontend_buildspec_content = templatefile("${local.buildspec_template_dir}/frontend-build.yml.tftpl", {
     frontend_source_dir = each.value.frontend_source_dir
     frontend_entry_file = each.value.frontend_entry_file
+    frontend_build_prefix = each.value.frontend_build_prefix
   })
   terraform_plan_buildspec_content = templatefile("${local.buildspec_template_dir}/terraform-plan.yml.tftpl", {
     terraform_env_dir = each.value.terraform_env_dir

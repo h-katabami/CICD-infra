@@ -302,7 +302,8 @@ resource "aws_codepipeline" "this" {
       output_artifacts = ["TerraformPlan"]
 
       configuration = {
-        ProjectName = aws_codebuild_project.terraform_plan.name
+        ProjectName   = aws_codebuild_project.terraform_plan.name
+        PrimarySource = "SourceOutput"
       }
     }
   }
@@ -339,7 +340,8 @@ resource "aws_codepipeline" "this" {
       input_artifacts = ["SourceOutput", "LambdaBuild", "FrontendBuild"]
 
       configuration = {
-        ProjectName = aws_codebuild_project.terraform_apply.name
+        ProjectName   = aws_codebuild_project.terraform_apply.name
+        PrimarySource = "SourceOutput"
       }
     }
   }
