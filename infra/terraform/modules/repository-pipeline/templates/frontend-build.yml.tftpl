@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - set -euo pipefail
+      - mkdir -p dist
+      - cp ${frontend_source_dir}/${frontend_entry_file} dist/${frontend_entry_file}
+
+artifacts:
+  base-directory: dist
+  files:
+    - '**/*'

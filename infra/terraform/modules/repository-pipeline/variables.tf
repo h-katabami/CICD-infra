@@ -45,22 +45,18 @@ variable "build_compute_type" {
   default = "BUILD_GENERAL1_SMALL"
 }
 
-variable "lambda_buildspec_path" {
-  type    = string
-  default = "buildspec/lambda-build.yml"
+variable "lambda_buildspec_content" {
+  type = string
 }
 
-variable "frontend_buildspec_path" {
-  type    = string
-  default = "buildspec/frontend-build.yml"
+variable "frontend_buildspec_content" {
+  type = string
 }
 
-variable "terraform_plan_buildspec_path" {
-  type    = string
-  default = "buildspec/terraform-plan.yml"
+variable "terraform_plan_buildspec_content" {
+  type = string
 }
 
-variable "terraform_apply_buildspec_path" {
-  type    = string
-  default = "buildspec/terraform-apply.yml"
+variable "terraform_apply_buildspec_content" {
+  type = string
 }

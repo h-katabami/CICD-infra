@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - set -euo pipefail
+      - test -f "$${CODEBUILD_SRC_DIR_LambdaBuild}/artifacts/metadata/lambda.env"
+      - . "$${CODEBUILD_SRC_DIR_LambdaBuild}/artifacts/metadata/lambda.env"
+  build:
+    commands:
+      - cd ${terraform_env_dir}/$${DEPLOY_ENV}
+      - terraform init -reconfigure
+      - terraform apply -auto-approve -var="lambda_artifact_bucket=$${LAMBDA_ARTIFACT_BUCKET}" -var="lambda_artifact_key=$${LAMBDA_ARTIFACT_KEY}" -var="lambda_source_code_hash=$${LAMBDA_SOURCE_CODE_HASH}"
+      - FRONTEND_BUCKET=$$(terraform output -raw frontend_bucket_name)
+      - aws s3 sync "$${CODEBUILD_SRC_DIR_FrontendBuild}" s3://$${FRONTEND_BUCKET}/ --delete
+      - aws s3 sync "$${CODEBUILD_SRC_DIR}/${scenario_dir}" s3://$${FRONTEND_BUCKET}/assets/scenario/
+      - aws s3 sync "$${CODEBUILD_SRC_DIR}/${gram_dir}" s3://$${FRONTEND_BUCKET}/assets/gram/

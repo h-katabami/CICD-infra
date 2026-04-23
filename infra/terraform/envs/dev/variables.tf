@@ -23,5 +23,13 @@ variable "repositories" {
     app_repository_name     = string
     build_artifact_bucket   = string
     manual_approval_enabled = optional(bool, false)
+    frontend_source_dir     = optional(string, "front")
+    frontend_entry_file     = optional(string, "index.html")
+    lambda_source_dir       = optional(string, "lambdas/GuidanceHandler")
+    lambda_package_name     = optional(string, "guidance-handler.zip")
+    lambda_build_prefix     = optional(string, "lambda/guidance-handler")
+    terraform_env_dir       = optional(string, "infra/terraform/envs")
+    scenario_dir            = optional(string, "scenario")
+    gram_dir                = optional(string, "gram")
   }))
 }

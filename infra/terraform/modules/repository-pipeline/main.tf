@@ -127,7 +127,7 @@ resource "aws_codebuild_project" "lambda_build" {
 
   source {
     type      = "CODEPIPELINE"
-    buildspec = var.lambda_buildspec_path
+    buildspec = var.lambda_buildspec_content
   }
 }
 
@@ -158,7 +158,7 @@ resource "aws_codebuild_project" "frontend_build" {
 
   source {
     type      = "CODEPIPELINE"
-    buildspec = var.frontend_buildspec_path
+    buildspec = var.frontend_buildspec_content
   }
 }
 
@@ -189,7 +189,7 @@ resource "aws_codebuild_project" "terraform_plan" {
 
   source {
     type      = "CODEPIPELINE"
-    buildspec = var.terraform_plan_buildspec_path
+    buildspec = var.terraform_plan_buildspec_content
   }
 }
 
@@ -220,7 +220,7 @@ resource "aws_codebuild_project" "terraform_apply" {
 
   source {
     type      = "CODEPIPELINE"
-    buildspec = var.terraform_apply_buildspec_path
+    buildspec = var.terraform_apply_buildspec_content
   }
 }
 

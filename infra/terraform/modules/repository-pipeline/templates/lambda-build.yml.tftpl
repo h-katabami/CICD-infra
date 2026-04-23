@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - set -euo pipefail
+      - REPO_NAME=$${APP_REPO_NAME:-unknown-app}
+      - BUILD_BUCKET=$${BUILD_ARTIFACT_BUCKET}
+      - BUILD_PREFIX=build/$${REPO_NAME}/$${DEPLOY_ENV}/${lambda_build_prefix}
+      - ARCHIVE_NAME=$${CODEBUILD_RESOLVED_SOURCE_VERSION}.zip
+      - mkdir -p artifacts/package artifacts/metadata
+      - cd ${lambda_source_dir}
+      - zip -r ../../artifacts/package/${lambda_package_name} .
+      - cd ../..
+      - aws s3 cp artifacts/package/${lambda_package_name} s3://$${BUILD_BUCKET}/$${BUILD_PREFIX}/$${ARCHIVE_NAME}
+      - HASH=$$(openssl dgst -sha256 -binary artifacts/package/${lambda_package_name} | openssl enc -base64)
+      - printf 'LAMBDA_ARTIFACT_BUCKET=%s\nLAMBDA_ARTIFACT_KEY=%s\nLAMBDA_SOURCE_CODE_HASH=%s\n' "$${BUILD_BUCKET}" "$${BUILD_PREFIX}/$${ARCHIVE_NAME}" "$${HASH}" > artifacts/metadata/lambda.env
+
+artifacts:
+  files:
+    - artifacts/package/${lambda_package_name}
+    - artifacts/metadata/lambda.env
