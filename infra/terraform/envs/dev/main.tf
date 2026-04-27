@@ -16,6 +16,18 @@ provider "aws" {
 
 locals {
   buildspec_template_dir = "${path.module}/../../modules/code-pipeline/templates"
+  github_oidc_provider_arn = var.github_oidc_provider_arn != null ? var.github_oidc_provider_arn : aws_iam_openid_connect_provider.github_actions[0].arn
+}
+
+resource "aws_iam_openid_connect_provider" "github_actions" {
+  count = var.github_oidc_provider_arn == null ? 1 : 0
+
+  url = "https://token.actions.githubusercontent.com"
+
+  client_id_list = ["sts.amazonaws.com"]
+  thumbprint_list = [
+    "6938fd4d98bab03faadb97b34396831e3780aea1"
+  ]
 }
 
 module "code_connections" {
@@ -76,4 +88,17 @@ module "code_pipeline" {
     scenario_dir      = each.value.scenario_dir
     gram_dir          = each.value.gram_dir
   })
+}
+
+module "github_actions_role" {
+  for_each = var.create_github_actions_roles ? var.repositories : {}
+
+  source = "../../modules/github-actions-oidc-role"
+
+  role_name           = "${each.key}-${var.environment}-gha-deploy-role"
+  repository_owner    = var.github_org
+  repository_name     = each.key
+  branch_name         = each.value.github_actions_branch_name
+  oidc_provider_arn   = local.github_oidc_provider_arn
+  managed_policy_arns = var.github_actions_managed_policy_arns
 }

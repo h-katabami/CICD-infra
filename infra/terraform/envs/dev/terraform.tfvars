@@ -3,6 +3,7 @@ aws_region           = "ap-northeast-1"
 artifact_bucket_name = "cicd-state-dev-237710157750"
 manage_state_bucket  = true
 github_org           = "h-katabami"
+github_oidc_provider_arn = "arn:aws:iam::237710157750:oidc-provider/token.actions.githubusercontent.com"
 
 code_connections = {
   github = {
@@ -25,9 +26,10 @@ s3_buckets = {
 
 repositories = {
   twilio-flow-custom-parts-cicd-test = {
-    branch_name     = "dev"
-    manual_approval = true
-    deploy_lambda   = true
-    deploy_frontend = true
+    branch_name                = "dev"
+    github_actions_branch_name = "dev2"
+    manual_approval            = true
+    deploy_lambda              = true
+    deploy_frontend            = true
   }
 }

@@ -20,6 +20,22 @@ variable "github_org" {
   type = string
 }
 
+variable "create_github_actions_roles" {
+  type    = bool
+  default = true
+}
+
+variable "github_oidc_provider_arn" {
+  type     = string
+  default  = null
+  nullable = true
+}
+
+variable "github_actions_managed_policy_arns" {
+  type    = list(string)
+  default = ["arn:aws:iam::aws:policy/AdministratorAccess"]
+}
+
 variable "artifact_bucket_name" {
   type = string
 }
@@ -49,6 +65,7 @@ variable "manage_state_bucket" {
 variable "repositories" {
   type = map(object({
     branch_name           = string
+    github_actions_branch_name = optional(string, "dev2")
     manual_approval       = optional(bool, false)
     deploy_lambda         = optional(bool, true)
     deploy_frontend       = optional(bool, true)
