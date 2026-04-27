@@ -1,13 +1,33 @@
+environment          = "dev"
 aws_region           = "ap-northeast-1"
-connection_name      = "github-shared-dev"
 artifact_bucket_name = "cicd-state-dev-237710157750"
+manage_state_bucket  = true
+github_org           = "h-katabami"
+
+code_connections = {
+  github = {
+    name          = "github-shared-dev"
+    provider_type = "GitHub"
+  }
+}
+
+s3_buckets = {
+  backend = {
+    bucket_name             = "cicd-state-dev-237710157750"
+    versioning_enabled      = true
+    encryption_algorithm    = "AES256"
+    block_public_acls       = true
+    block_public_policy     = true
+    ignore_public_acls      = true
+    restrict_public_buckets = true
+  }
+}
 
 repositories = {
-  cicd_test = {
-    full_repository_id      = "h-katabami/twilio-flow-custom-parts-cicd-test"
-    branch_name             = "dev"
-    app_repository_name     = "twilio-flow-custom-parts-cicd-test"
-    build_artifact_bucket   = "cicd-state-dev-237710157750"
-    manual_approval_enabled = true
+  twilio-flow-custom-parts-cicd-test = {
+    branch_name     = "dev"
+    manual_approval = true
+    deploy_lambda   = false
+    deploy_frontend = true
   }
 }

@@ -22,17 +22,19 @@ variable "deploy_env" {
   type = string
 }
 
-variable "app_repository_name" {
-  type = string
-}
-
-variable "build_artifact_bucket" {
-  type = string
-}
-
-variable "manual_approval_enabled" {
+variable "manual_approval" {
   type    = bool
   default = false
+}
+
+variable "deploy_lambda" {
+  type    = bool
+  default = true
+}
+
+variable "deploy_frontend" {
+  type    = bool
+  default = true
 }
 
 variable "build_image" {

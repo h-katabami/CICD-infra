@@ -1,13 +1,31 @@
-aws_region           = "ap-northeast-1"
-connection_name      = "github-shared-prod"
+environment          = "prod"
+aws_region           = "us-east-1"
 artifact_bucket_name = "cicd-state-prod-353666332910"
+manage_state_bucket  = true
+github_org           = "h-katabami"
+
+code_connections = {
+  github = {
+    name          = "github-shared-prod"
+    provider_type = "GitHub"
+  }
+}
+
+s3_buckets = {
+  backend = {
+    bucket_name             = "cicd-state-prod-353666332910"
+    versioning_enabled      = true
+    encryption_algorithm    = "AES256"
+    block_public_acls       = true
+    block_public_policy     = true
+    ignore_public_acls      = true
+    restrict_public_buckets = true
+  }
+}
 
 repositories = {
-  cicd_test = {
-    full_repository_id      = "h-katabami/twilio-flow-custom-parts-cicd-test"
-    branch_name             = "prod"
-    app_repository_name     = "twilio-flow-custom-parts-cicd-test"
-    build_artifact_bucket   = "cicd-state-prod-353666332910"
-    manual_approval_enabled = true
+  twilio-flow-custom-parts-cicd-test = {
+    branch_name     = "prod"
+    manual_approval = true
   }
 }

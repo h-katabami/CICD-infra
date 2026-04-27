@@ -1,0 +1,140 @@
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].data.aws_iam_policy_document.codebuild_assume_role: Reading...
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].data.aws_iam_policy_document.pipeline_assume_role: Reading...
+aws_codestarconnections_connection.github: Refreshing state... [id=arn:aws:codestar-connections:ap-northeast-1:237710157750:connection/57ed8eae-2080-4f70-af06-ec4ce49bc353]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].data.aws_iam_policy_document.codebuild_assume_role: Read complete after 0s [id=1229436035]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].data.aws_iam_policy_document.pipeline_assume_role: Read complete after 0s [id=2245101310]
+module.s3_bucket[0].aws_s3_bucket.this: Refreshing state... [id=cicd-state-dev-237710157750]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_iam_role.codebuild: Refreshing state... [id=twilio-flow-custom-parts-cicd-test-dev-codebuild-role]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_iam_role.pipeline: Refreshing state... [id=twilio-flow-custom-parts-cicd-test-dev-pipeline-role]
+module.s3_bucket[0].aws_s3_bucket_versioning.this: Refreshing state... [id=cicd-state-dev-237710157750]
+module.s3_bucket[0].aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cicd-state-dev-237710157750]
+module.s3_bucket[0].aws_s3_bucket_public_access_block.this: Refreshing state... [id=cicd-state-dev-237710157750]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_iam_role_policy_attachment.codebuild_admin: Refreshing state... [id=twilio-flow-custom-parts-cicd-test-dev-codebuild-role-20260427035453868100000001]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_codebuild_project.frontend_build: Refreshing state... [id=arn:aws:codebuild:ap-northeast-1:237710157750:project/twilio-flow-custom-parts-cicd-test-dev-frontend-build]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_codebuild_project.terraform_apply: Refreshing state... [id=arn:aws:codebuild:ap-northeast-1:237710157750:project/twilio-flow-custom-parts-cicd-test-dev-terraform-apply]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_codebuild_project.terraform_plan: Refreshing state... [id=arn:aws:codebuild:ap-northeast-1:237710157750:project/twilio-flow-custom-parts-cicd-test-dev-terraform-plan]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_codebuild_project.lambda_build: Refreshing state... [id=arn:aws:codebuild:ap-northeast-1:237710157750:project/twilio-flow-custom-parts-cicd-test-dev-lambda-build]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_iam_role_policy.pipeline: Refreshing state... [id=twilio-flow-custom-parts-cicd-test-dev-pipeline-role:twilio-flow-custom-parts-cicd-test-dev-pipeline-policy]
+module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_codepipeline.this: Refreshing state... [id=twilio-flow-custom-parts-cicd-test-dev-pipeline]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+  ~ update in-place
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_codestarconnections_connection.github will be destroyed
+  # (because aws_codestarconnections_connection.github is not in configuration)
+  - resource "aws_codestarconnections_connection" "github" {
+      - arn               = "arn:aws:codestar-connections:ap-northeast-1:237710157750:connection/57ed8eae-2080-4f70-af06-ec4ce49bc353" -> null
+      - connection_status = "AVAILABLE" -> null
+      - id                = "arn:aws:codestar-connections:ap-northeast-1:237710157750:connection/57ed8eae-2080-4f70-af06-ec4ce49bc353" -> null
+      - name              = "github-shared-dev" -> null
+      - provider_type     = "GitHub" -> null
+      - tags              = {} -> null
+      - tags_all          = {} -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.code_connections.aws_codeconnections_connection.this["github"] will be created
+  + resource "aws_codeconnections_connection" "this" {
+      + arn               = (known after apply)
+      + connection_status = (known after apply)
+      + id                = (known after apply)
+      + name              = "github-shared-dev"
+      + owner_account_id  = (known after apply)
+      + provider_type     = "GitHub"
+      + tags_all          = {}
+    }
+
+  # module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_codepipeline.this will be updated in-place
+  ~ resource "aws_codepipeline" "this" {
+        id             = "twilio-flow-custom-parts-cicd-test-dev-pipeline"
+        name           = "twilio-flow-custom-parts-cicd-test-dev-pipeline"
+        tags           = {}
+        # (6 unchanged attributes hidden)
+
+      ~ stage {
+            name = "Source"
+
+          ~ action {
+              ~ configuration      = {
+                  - "BranchName"       = "dev"
+                  - "ConnectionArn"    = "arn:aws:codestar-connections:ap-northeast-1:237710157750:connection/57ed8eae-2080-4f70-af06-ec4ce49bc353"
+                  - "DetectChanges"    = "true"
+                  - "FullRepositoryId" = "h-katabami/twilio-flow-custom-parts-cicd-test"
+                } -> (known after apply)
+                name               = "Source"
+                # (11 unchanged attributes hidden)
+            }
+        }
+
+        # (6 unchanged blocks hidden)
+    }
+
+  # module.code_pipeline["twilio-flow-custom-parts-cicd-test"].aws_iam_role_policy.pipeline will be updated in-place
+  ~ resource "aws_iam_role_policy" "pipeline" {
+        id          = "twilio-flow-custom-parts-cicd-test-dev-pipeline-role:twilio-flow-custom-parts-cicd-test-dev-pipeline-policy"
+        name        = "twilio-flow-custom-parts-cicd-test-dev-pipeline-policy"
+      ~ policy      = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = [
+                          - "s3:GetObject",
+                          - "s3:GetObjectVersion",
+                          - "s3:PutObject",
+                          - "s3:GetBucketVersioning",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = [
+                          - "arn:aws:s3:::cicd-state-dev-237710157750",
+                          - "arn:aws:s3:::cicd-state-dev-237710157750/*",
+                        ]
+                    },
+                  - {
+                      - Action   = [
+                          - "codebuild:BatchGetBuilds",
+                          - "codebuild:StartBuild",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = [
+                          - "arn:aws:codebuild:ap-northeast-1:237710157750:project/twilio-flow-custom-parts-cicd-test-dev-lambda-build",
+                          - "arn:aws:codebuild:ap-northeast-1:237710157750:project/twilio-flow-custom-parts-cicd-test-dev-frontend-build",
+                          - "arn:aws:codebuild:ap-northeast-1:237710157750:project/twilio-flow-custom-parts-cicd-test-dev-terraform-plan",
+                          - "arn:aws:codebuild:ap-northeast-1:237710157750:project/twilio-flow-custom-parts-cicd-test-dev-terraform-apply",
+                        ]
+                    },
+                  - {
+                      - Action   = [
+                          - "codeconnections:UseConnection",
+                          - "codestar-connections:UseConnection",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:codestar-connections:ap-northeast-1:237710157750:connection/57ed8eae-2080-4f70-af06-ec4ce49bc353"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+Plan: 1 to add, 2 to change, 1 to destroy.
+
+Changes to Outputs:
+  + code_connections = {
+      + github = {
+          + arn    = (known after apply)
+          + id     = (known after apply)
+          + status = (known after apply)
+        }
+    }
+  - connection_arn   = "arn:aws:codestar-connections:ap-northeast-1:237710157750:connection/57ed8eae-2080-4f70-af06-ec4ce49bc353" -> null
+
+笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.

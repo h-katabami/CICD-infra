@@ -4,8 +4,10 @@ phases:
   install:
     commands:
       - set -eu
+%{ if deploy_lambda ~}
       - test -f "$${CODEBUILD_SRC_DIR_LambdaBuild}/artifacts/metadata/lambda.env"
       - . "$${CODEBUILD_SRC_DIR_LambdaBuild}/artifacts/metadata/lambda.env"
+%{ endif ~}
       - curl -fsSL "https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip" -o /tmp/terraform.zip
       - unzip -oq /tmp/terraform.zip -d /usr/local/bin
       - terraform version
@@ -15,7 +17,11 @@ phases:
       - terraform init -reconfigure
       - terraform fmt -check
       - terraform validate
+%{ if deploy_lambda ~}
       - terraform plan -out=tfplan -var="lambda_artifact_bucket=$${LAMBDA_ARTIFACT_BUCKET}" -var="lambda_artifact_key=$${LAMBDA_ARTIFACT_KEY}" -var="lambda_source_code_hash=$${LAMBDA_SOURCE_CODE_HASH}"
+%{ else ~}
+      - terraform plan -out=tfplan
+%{ endif ~}
       - terraform show -no-color tfplan > tfplan.txt
 
 artifacts:

@@ -4,8 +4,10 @@ phases:
   install:
     commands:
       - set -eu
+%{ if deploy_lambda ~}
       - test -f "$${CODEBUILD_SRC_DIR_LambdaBuild}/artifacts/metadata/lambda.env"
       - . "$${CODEBUILD_SRC_DIR_LambdaBuild}/artifacts/metadata/lambda.env"
+%{ endif ~}
       - curl -fsSL "https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip" -o /tmp/terraform.zip
       - unzip -oq /tmp/terraform.zip -d /usr/local/bin
       - terraform version
@@ -13,8 +15,14 @@ phases:
     commands:
       - cd ${terraform_env_dir}/$${DEPLOY_ENV}
       - terraform init -reconfigure
+%{ if deploy_lambda ~}
       - terraform apply -auto-approve -var="lambda_artifact_bucket=$${LAMBDA_ARTIFACT_BUCKET}" -var="lambda_artifact_key=$${LAMBDA_ARTIFACT_KEY}" -var="lambda_source_code_hash=$${LAMBDA_SOURCE_CODE_HASH}"
+%{ else ~}
+      - terraform apply -auto-approve
+%{ endif ~}
+%{ if deploy_frontend ~}
       - FRONTEND_BUCKET=`terraform output -raw frontend_bucket_name`
       - aws s3 sync "$${CODEBUILD_SRC_DIR_FrontendBuild}" s3://$${FRONTEND_BUCKET}/ --delete
       - aws s3 sync "$${CODEBUILD_SRC_DIR}/${scenario_dir}" s3://$${FRONTEND_BUCKET}/assets/scenario/
       - aws s3 sync "$${CODEBUILD_SRC_DIR}/${gram_dir}" s3://$${FRONTEND_BUCKET}/assets/gram/
+%{ endif ~}

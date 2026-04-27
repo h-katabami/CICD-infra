@@ -84,7 +84,7 @@ locals {
   common_env = [
     {
       name  = "APP_REPO_NAME"
-      value = var.app_repository_name
+      value = split("/", var.full_repository_id)[1]
       type  = "PLAINTEXT"
     },
     {
@@ -94,7 +94,7 @@ locals {
     },
     {
       name  = "BUILD_ARTIFACT_BUCKET"
-      value = var.build_artifact_bucket
+      value = var.artifact_bucket_name
       type  = "PLAINTEXT"
     }
   ]
@@ -253,38 +253,46 @@ resource "aws_codepipeline" "this" {
     }
   }
 
-  stage {
-    name = "LambdaBuild"
+  dynamic "stage" {
+    for_each = var.deploy_lambda ? [1] : []
 
-    action {
-      name             = "LambdaBuild"
-      category         = "Build"
-      owner            = "AWS"
-      provider         = "CodeBuild"
-      version          = "1"
-      input_artifacts  = ["SourceOutput"]
-      output_artifacts = ["LambdaBuild"]
+    content {
+      name = "LambdaBuild"
 
-      configuration = {
-        ProjectName = aws_codebuild_project.lambda_build.name
+      action {
+        name             = "LambdaBuild"
+        category         = "Build"
+        owner            = "AWS"
+        provider         = "CodeBuild"
+        version          = "1"
+        input_artifacts  = ["SourceOutput"]
+        output_artifacts = ["LambdaBuild"]
+
+        configuration = {
+          ProjectName = aws_codebuild_project.lambda_build.name
+        }
       }
     }
   }
 
-  stage {
-    name = "FrontendBuild"
+  dynamic "stage" {
+    for_each = var.deploy_frontend ? [1] : []
 
-    action {
-      name             = "FrontendBuild"
-      category         = "Build"
-      owner            = "AWS"
-      provider         = "CodeBuild"
-      version          = "1"
-      input_artifacts  = ["SourceOutput"]
-      output_artifacts = ["FrontendBuild"]
+    content {
+      name = "FrontendBuild"
 
-      configuration = {
-        ProjectName = aws_codebuild_project.frontend_build.name
+      action {
+        name             = "FrontendBuild"
+        category         = "Build"
+        owner            = "AWS"
+        provider         = "CodeBuild"
+        version          = "1"
+        input_artifacts  = ["SourceOutput"]
+        output_artifacts = ["FrontendBuild"]
+
+        configuration = {
+          ProjectName = aws_codebuild_project.frontend_build.name
+        }
       }
     }
   }
@@ -298,7 +306,7 @@ resource "aws_codepipeline" "this" {
       owner            = "AWS"
       provider         = "CodeBuild"
       version          = "1"
-      input_artifacts  = ["SourceOutput", "LambdaBuild"]
+      input_artifacts  = compact(["SourceOutput", var.deploy_lambda ? "LambdaBuild" : ""])
       output_artifacts = ["TerraformPlan"]
 
       configuration = {
@@ -309,7 +317,7 @@ resource "aws_codepipeline" "this" {
   }
 
   dynamic "stage" {
-    for_each = var.manual_approval_enabled ? [1] : []
+    for_each = var.manual_approval ? [1] : []
 
     content {
       name = "Approval"
@@ -337,7 +345,7 @@ resource "aws_codepipeline" "this" {
       owner           = "AWS"
       provider        = "CodeBuild"
       version         = "1"
-      input_artifacts = ["SourceOutput", "LambdaBuild", "FrontendBuild"]
+      input_artifacts = compact(["SourceOutput", var.deploy_lambda ? "LambdaBuild" : "", var.deploy_frontend ? "FrontendBuild" : ""])
 
       configuration = {
         ProjectName   = aws_codebuild_project.terraform_apply.name
