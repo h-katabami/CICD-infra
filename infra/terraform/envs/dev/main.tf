@@ -66,6 +66,7 @@ module "code_pipeline" {
     terraform_version = each.value.terraform_version
     terraform_env_dir = each.value.terraform_env_dir
     deploy_lambda     = each.value.deploy_lambda
+    deploy_frontend   = each.value.deploy_frontend
   })
   terraform_apply_buildspec_content = templatefile("${local.buildspec_template_dir}/terraform-apply.yml.tftpl", {
     terraform_version = each.value.terraform_version

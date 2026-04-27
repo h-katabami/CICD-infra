@@ -18,9 +18,9 @@ phases:
       - terraform fmt -check
       - terraform validate
 %{ if deploy_lambda ~}
-      - terraform plan -out=tfplan -var="lambda_artifact_bucket=$${LAMBDA_ARTIFACT_BUCKET}" -var="lambda_artifact_key=$${LAMBDA_ARTIFACT_KEY}" -var="lambda_source_code_hash=$${LAMBDA_SOURCE_CODE_HASH}"
+      - terraform plan -out=tfplan -var="deploy_lambda=${deploy_lambda}" -var="deploy_frontend=${deploy_frontend}" -var="lambda_artifact_bucket=$${LAMBDA_ARTIFACT_BUCKET}" -var="lambda_artifact_key=$${LAMBDA_ARTIFACT_KEY}" -var="lambda_source_code_hash=$${LAMBDA_SOURCE_CODE_HASH}"
 %{ else ~}
-      - terraform plan -out=tfplan
+      - terraform plan -out=tfplan -var="deploy_lambda=${deploy_lambda}" -var="deploy_frontend=${deploy_frontend}"
 %{ endif ~}
       - terraform show -no-color tfplan > tfplan.txt
 

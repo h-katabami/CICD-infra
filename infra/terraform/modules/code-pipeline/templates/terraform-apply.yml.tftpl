@@ -16,9 +16,9 @@ phases:
       - cd ${terraform_env_dir}/$${DEPLOY_ENV}
       - terraform init -reconfigure
 %{ if deploy_lambda ~}
-      - terraform apply -auto-approve -var="lambda_artifact_bucket=$${LAMBDA_ARTIFACT_BUCKET}" -var="lambda_artifact_key=$${LAMBDA_ARTIFACT_KEY}" -var="lambda_source_code_hash=$${LAMBDA_SOURCE_CODE_HASH}"
+      - terraform apply -auto-approve -var="deploy_lambda=${deploy_lambda}" -var="deploy_frontend=${deploy_frontend}" -var="lambda_artifact_bucket=$${LAMBDA_ARTIFACT_BUCKET}" -var="lambda_artifact_key=$${LAMBDA_ARTIFACT_KEY}" -var="lambda_source_code_hash=$${LAMBDA_SOURCE_CODE_HASH}"
 %{ else ~}
-      - terraform apply -auto-approve
+      - terraform apply -auto-approve -var="deploy_lambda=${deploy_lambda}" -var="deploy_frontend=${deploy_frontend}"
 %{ endif ~}
 %{ if deploy_frontend ~}
       - FRONTEND_BUCKET=`terraform output -raw frontend_bucket_name`
