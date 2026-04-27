@@ -27,7 +27,7 @@ repositories = {
   twilio-flow-custom-parts-cicd-test = {
     branch_name     = "dev"
     manual_approval = true
-    deploy_lambda   = false
+    deploy_lambda   = true
     deploy_frontend = true
   }
 }
